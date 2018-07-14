@@ -6,7 +6,10 @@ const reservationSchema = mongoose.Schema({
     email: String,
     contactNo: String,
     seats: Array,
-    date: Date
+    date: Date,
+    showTime: Number,
+    movieId: { type: mongoose.Schema.Types.ObjectId, ref: 'Movie', required: true },
+    theatreId: { type: mongoose.Schema.Types.ObjectId, ref: 'Theatre', required: true },
 
 });
 

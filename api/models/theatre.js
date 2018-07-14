@@ -5,7 +5,7 @@ const theatreSchema = mongoose.Schema({
     name: String,
     cityId: { type: mongoose.Schema.Types.ObjectId, ref: 'City', required: true },
     movieId: { type: mongoose.Schema.Types.ObjectId, ref: 'Movie', required: true },
-    seats: Array
+    seats: Array,
 });
 
 module.exports = mongoose.model('Theatre', theatreSchema);

@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const mongoose = require('mongoose');
 
 const locationRoutes = require('./api/routes/location');
+const reservationRoutes = require('./api/routes/booking');
 
 //connect to mongo db on localhost
 mongoose.connect(
@@ -31,6 +32,7 @@ app.use((req, res, next) => {
 
 //routes
 app.use('/location', locationRoutes);
+app.use('/reservation', reservationRoutes);
 
 //throw error when no endpoint
 app.use((req, res, next) => {

@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const Movie = require("../models/movie");
 const City = require("../models/city");
 const Theatre = require("../models/theatre");
+const Reservation = require("../models/reservation");
 
 // Post call to add location
 router.post('/', (req, res, next) => {
@@ -129,7 +130,9 @@ router.post('/:locationId/theatre', (req, res, next) => {
     });
 });
 
-// get list of theatres
+// get list of all theatres in location OR
+// based on the query parameter of movie id all theaters in location
+// that has the movie playing
 router.get('/:locationId/theatre', (req, res, next) => {
     const cityId = req.params.locationId;
     console.log("req.query " + Object.keys(req.query).length);
@@ -166,6 +169,38 @@ router.get('/:locationId/theatre/:theatreId', (req, res, next) => {
         console.log(err);
         res.status(500).json({error: err});
     });
+});
+
+// Get the seats based on seats availability
+// Need to reference the reservation collection
+// Time should be passed as query to get details according to time
+router.get('/:locationId/theatre/:theatreId/seats', (req, res, next) => {
+    const theatreId = req.params.theatreId;
+    const time = req.query.time;
+    console.log(time);
+    Theatre.findById(theatreId, '-__v').exec()
+    .then(doc => {
+        movieId = doc.movieId;
+        console.log("movieId: " + movieId);
+        Reservation.find().where('movieId').equals(movieId).
+        where('showTime').equals(time).exec().then(reservation =>{
+            var bookedSeats = [];
+            reservation.map(booking => {
+                booking.seats.map(seat =>{
+                    bookedSeats.push(seat);
+                })
+            })
+            console.log(bookedSeats);
+            var merged_object = {doc, bookedSeats};
+            res.status(200).json(merged_object)
+        }).catch(err1 => {
+            console.log(err1);
+            res.status(500).json({error: err1});
+        });
+    }).catch(err => {
+        console.log(err);
+        res.status(500).json({error: err});
+    }); 
 })
 
 module.exports = router;
