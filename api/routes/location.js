@@ -69,7 +69,10 @@ router.post('/:locationId/movie', (req, res, next) => {
         musicDirector: req.body.music_by,
         cast: req.body.cast,
         runningTime: req.body.running_time,
-        language: req.body.language
+        language: req.body.language,
+        imageName: req.body.imageName,
+        trailer: req.body.trailer,
+        description: req.body.description
     },{
         versionKey: false
     });
@@ -109,7 +112,7 @@ router.post('/:locationId/theatre', (req, res, next) => {
     const theatre = new Theatre({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
-        cityId: req.body.cityId,
+        cityId: req.params.locationId,
         movieId: req.body.movieId,
         seats: req.body.seats
     },{
@@ -177,13 +180,15 @@ router.get('/:locationId/theatre/:theatreId', (req, res, next) => {
 router.get('/:locationId/theatre/:theatreId/seats', (req, res, next) => {
     const theatreId = req.params.theatreId;
     const time = req.query.time;
+    const date = req.query.date;
     console.log(time);
     Theatre.findById(theatreId, '-__v').exec()
     .then(doc => {
         movieId = doc.movieId;
         console.log("movieId: " + movieId);
         Reservation.find().where('movieId').equals(movieId).
-        where('showTime').equals(time).exec().then(reservation =>{
+        where('showTime').equals(time).
+        where('date').equals(new Date(date)).exec().then(reservation =>{
             var bookedSeats = [];
             reservation.map(booking => {
                 booking.seats.map(seat =>{

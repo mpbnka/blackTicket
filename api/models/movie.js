@@ -10,7 +10,10 @@ const movieSchema = mongoose.Schema({
     musicDirector: String,
     cast: Array,
     runningTime: Number,
-    language: String
+    language: String,
+    imageName: String,
+    description: String,
+    trailer: String
 });
 
 module.exports = mongoose.model('Movie', movieSchema);
