@@ -31,8 +31,10 @@ app.use((req, res, next) => {
   });
 
 //routes
-app.use('/location', locationRoutes);
-app.use('/reservation', reservationRoutes);
+app.use('/api/location', locationRoutes);
+app.use('/api/reservation', reservationRoutes);
+//redirect all other to dist
+app.use('/', express.static('blackticket'))
 
 //throw error when no endpoint
 app.use((req, res, next) => {
@@ -49,4 +51,5 @@ app.use((error, req, res, next) => {
         }
     });
 });
+
 module.exports = app;
